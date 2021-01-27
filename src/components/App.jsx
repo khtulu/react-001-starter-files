@@ -1,17 +1,49 @@
 import React from 'react';
 import Header from './Header';
+import Burger from './Burger';
 import Order from './Order';
 import MenuAdmin from './MenuAdmin';
+import sampleBurgers from '../sample-burgers';
 
 class App extends React.Component {
+  state = {
+    burgers: {},
+    order: {},
+  };
+
+  addBurger = (burger) => {
+    console.log('addBurger', burger);
+    const burgers = { ...this.state.burgers };
+    burgers[`burger${Date.now()}`] = burger;
+    this.setState({ burgers });
+  };
+
+  loadSampleBurgers = () => {
+    this.setState({ burgers: sampleBurgers });
+  };
+
   render() {
     return (
       <div className='burger-paradise'>
         <div className='menu'>
           <Header title='Very Hot Burgers' />
+          <ul className='burgers'>
+            {Object.keys(this.state.burgers).map((key) => {
+              return (
+                <Burger
+                  key={key}
+                  index={key}
+                  details={this.state.burgers[key]}
+                />
+              );
+            })}
+          </ul>
         </div>
         <Order />
-        <MenuAdmin />
+        <MenuAdmin
+          addBurger={this.addBurger}
+          loadSampleBurgers={this.loadSampleBurgers}
+        />
       </div>
     );
   }
